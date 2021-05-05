@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:title="Salir"
+        android:id="@+id/actionLogOut"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        app:showAsAction="never" />
+
+    <item
+        android:title="Agregar posteo"
+        android:id="@+id/action_add_post"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:icon="@drawable/ic_action_add"
+        app:showAsAction="always"
+
+        />
+</menu>
