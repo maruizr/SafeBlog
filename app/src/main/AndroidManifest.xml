@@ -11,18 +11,20 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppBlog">
-        <activity android:name=".AddPostActivity"></activity>
-        <activity android:name=".HomeActivity" />
-        <activity
-            android:name=".RegisterActivity"
-            android:parentActivityName=".MainActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".SplashActivity"
+            android:theme="@android:style/Theme.DeviceDefault.NoActionBar.Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".AddPostActivity" />
+        <activity android:name=".HomeActivity" />
+        <activity
+            android:name=".RegisterActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity android:name=".MainActivity"></activity>
     </application>
 
 </manifest>

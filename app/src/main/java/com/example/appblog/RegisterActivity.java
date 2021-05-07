@@ -30,7 +30,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    private EditText registerMail, registerPassword;
+    private EditText registerMail, registerPassword, registerName;
     private Button registerBtn;
     private TextView alreadyHaveAnAccount;
 
@@ -66,6 +66,7 @@ public class RegisterActivity extends AppCompatActivity {
         registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String name = registerName.getText().toString().trim();
                 String email = registerMail.getText().toString().trim();
                 String password = registerPassword.getText().toString().trim();
 
@@ -79,7 +80,7 @@ public class RegisterActivity extends AppCompatActivity {
                 }
                 else
                 {
-                    registerUser(email, password);
+                    registerUser( email, password);
                 }
             }
         });

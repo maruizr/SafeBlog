@@ -1,58 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AddPostActivity"
-    android:background="@drawable/fondo">
+    android:background="@drawable/principal"
+    android:padding="20dp"
+    tools:context=".AddPostActivity">
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
 
     <EditText
         android:id="@+id/title"
-        android:layout_marginTop="15dp"
-        android:hint="Titulo"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="44dp"
         android:background="@drawable/reg_edittext_style"
         android:gravity="start"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
-    <ImageView
-        android:id="@+id/post_image_blog"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        android:minHeight="200dp"
-        android:scaleType="fitXY"/>
-
+        android:hint="Titulo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:layout_marginTop="80dp"
         android:id="@+id/description_blog"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="300dp"
+        android:layout_height="500dp"
+        android:layout_below="@+id/title"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="28dp"
+        android:background="@drawable/reg_edittext_style"
         android:gravity="start"
         android:hint="Descripcion del posteo"
-        android:background="@drawable/reg_edittext_style"
         android:inputType="textCapSentences|textMultiLine"
-        android:minHeight="500dp" />
+        android:minHeight="500dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title" />
 
     <Button
         android:id="@+id/upload"
-        android:layout_margin="600dp"
-        android:text="Postear"
-        android:textColor="@color/black"
-        android:background="@drawable/reg_edittext_style"
         android:layout_width="130dp"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/description_blog"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:gravity="center" />
+        android:backgroundTint="#0F676B"
+        android:text="Postear"
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/description_blog" />
 
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
