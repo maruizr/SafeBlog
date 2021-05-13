@@ -4,10 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/principal"
     android:padding="20dp"
     tools:context=".MainActivity">
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/emailTIL"
+        android:layout_width="265dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/guideline"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.961" >
     <EditText
         android:id="@+id/regMail"
         android:layout_width="265dp"
@@ -15,12 +23,8 @@
         android:background="@drawable/reg_edittext_style"
         android:ems="10"
         android:hint="Mail"
-        android:inputType="textEmailAddress"
-        app:layout_constraintBottom_toTopOf="@+id/guideline"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.961" />
+        android:inputType="textEmailAddress" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"
@@ -29,36 +33,43 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.5" />
 
-    <EditText
-        android:id="@+id/regPassword"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/passwordTIL"
         android:layout_width="265dp"
         android:layout_height="wrap_content"
-        android:background="@drawable/reg_edittext_style"
-        android:ems="10"
-        android:hint="Password"
-        android:inputType="textPassword"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline"
-        app:layout_constraintVertical_bias="0.02" />
+        app:layout_constraintVertical_bias="0.02"
+        app:passwordToggleEnabled="true">
+
+        <EditText
+            android:id="@+id/regPassword"
+            android:layout_width="265dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/reg_edittext_style"
+            android:ems="10"
+            android:hint="Password"
+            android:inputType="textPassword" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
         android:id="@+id/logForgotPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="16dp"
         android:text="¿Olvidó su contraseña?"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.726"
+        app:layout_constraintHorizontal_bias="0.725"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/regPassword" />
+        app:layout_constraintTop_toBottomOf="@+id/passwordTIL" />
 
     <Button
         android:id="@+id/regBtn"
         android:layout_width="144dp"
         android:layout_height="51dp"
-        android:backgroundTint="#0F676B"
+        android:backgroundTint="#8C52FF"
         android:text="Ingresar"
         android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"

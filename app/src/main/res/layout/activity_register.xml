@@ -4,10 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/principal"
     android:padding="20dp"
     tools:context=".RegisterActivity">
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/emailTIL"
+        android:layout_width="265dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/guideline"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.972">
     <EditText
         android:id="@+id/regMail"
         android:layout_width="265dp"
@@ -15,12 +23,8 @@
         android:background="@drawable/reg_edittext_style"
         android:ems="10"
         android:hint="Mail"
-        android:inputType="textEmailAddress"
-        app:layout_constraintBottom_toTopOf="@+id/guideline"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.972" />
+        android:inputType="textEmailAddress"/>
+    </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"
@@ -29,32 +33,38 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.5" />
 
-    <EditText
-        android:id="@+id/regPassword"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/passwordTIL"
         android:layout_width="265dp"
         android:layout_height="wrap_content"
-        android:background="@drawable/reg_edittext_style"
-        android:ems="10"
-        android:hint="Password"
-        android:inputType="textPassword"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline"
-        app:layout_constraintVertical_bias="0.024" />
+        app:layout_constraintVertical_bias="0.024"
+        app:passwordToggleEnabled="true">
+        <EditText
+            android:id="@+id/regPassword"
+            android:layout_width="265dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/reg_edittext_style"
+            android:ems="10"
+            android:hint="Password"
+            android:inputType="textPassword" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/regBtn"
         android:layout_width="166dp"
         android:layout_height="54dp"
-        android:backgroundTint="#0F676B"
+        android:backgroundTint="#8C52FF"
         android:text="Registrarse"
         android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/regPassword"
+        app:layout_constraintTop_toBottomOf="@+id/passwordTIL"
         app:layout_constraintVertical_bias="0.34" />
 
     <TextView
