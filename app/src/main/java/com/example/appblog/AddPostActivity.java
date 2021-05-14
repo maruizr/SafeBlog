@@ -29,8 +29,12 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -56,6 +60,9 @@ public class AddPostActivity extends AppCompatActivity {
     ProgressDialog pd;
 
     FirebaseAuth auth;
+    DatabaseReference userDbRef;
+
+    String name, email, uid, dp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,12 +77,33 @@ public class AddPostActivity extends AppCompatActivity {
         permission();
         titleBlog = findViewById(R.id.titlePost);
         descBlog = findViewById(R.id.descPost);
-        upload = findViewById(R.id.upPost);
-        imgBlog = findViewById(R.id.addImgPost);
+        upload = findViewById(R.id.upPostBtn);
+        imgBlog = findViewById(R.id.imgPost);
 
         pd = new ProgressDialog(this);
 
         auth = FirebaseAuth.getInstance();
+        checkUserStatus();
+
+        actionBar.setSubtitle(email);
+
+        userDbRef = FirebaseDatabase.getInstance().getReference("Users");
+        Query query = userDbRef.orderByChild("email").equalTo(email);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot ds: dataSnapshot.getChildren()){
+                    name = ""+ds.child("name").getValue();
+                    email = ""+ds.child("email").getValue();
+                    dp = ""+ds.child("image").getValue();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
         imgBlog.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,28 +124,39 @@ public class AddPostActivity extends AppCompatActivity {
                 if(TextUtils.isEmpty(description)){
                     descBlog.setError("La descripción es requerida");
                 }
+
+                else if(image_uri == null){
+                    uploadData(title, description,"noImage");
+                }
                 else{
-                    uploadData(title, description);
+                    uploadData(title, description,String.valueOf(image_uri));
                 }
             }
         });
     }
 
-    private void uploadData(String title, String description) {
+    private void checkUserStatus(){
+        FirebaseUser user = auth.getCurrentUser();
+        if(user != null){
+            email = user.getEmail();
+            uid = user.getUid();
+        }
+        else{
+            startActivity(new Intent(this, StartActivity.class));
+            finish();
+        }
+    }
+
+    private void uploadData(String title, String description, String uri) {
         pd.setMessage("Publicando post");
         pd.show();
 
         final String timeStamp = String.valueOf(System.currentTimeMillis());
         String filepath = "Posts/"+"post_"+timeStamp;
 
-        if(imgBlog.getDrawable() != null){
-            Bitmap bitmap = ((BitmapDrawable)imgBlog.getDrawable()).getBitmap();
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-            byte[] data = baos.toByteArray();
-
+        if(!uri.equals("noImage")){
             StorageReference reference = FirebaseStorage.getInstance().getReference().child(filepath);
-            reference.putBytes(data).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            reference.putFile(Uri.parse(uri)).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
@@ -130,9 +169,11 @@ public class AddPostActivity extends AppCompatActivity {
 
                         HashMap<String, Object> hashMap = new HashMap<>();
 
-                        hashMap.put("uid", user.getUid());
-                        hashMap.put("uEmail", user.getEmail());
+                        hashMap.put("uid", uid);
+                        hashMap.put("uName", name);
+                        hashMap.put("uEmail", email);
                         hashMap.put("pId", timeStamp);
+                        hashMap.put("uDp", dp);
                         hashMap.put("pTitle", title);
                         hashMap.put("pImage", downloadUri);
                         hashMap.put("pDescription", description);
@@ -148,8 +189,6 @@ public class AddPostActivity extends AppCompatActivity {
                                 descBlog.setText("");
                                 imgBlog.setImageURI(null);
                                 image_uri = null;
-
-                                startActivity(new Intent(AddPostActivity.this, HomeActivity.class));
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
@@ -163,9 +202,40 @@ public class AddPostActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     Toast.makeText(AddPostActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-                    pd.dismiss();
                 }
             });
+        }
+        else{
+            HashMap<String, Object> hashMap = new HashMap<>();
+
+            hashMap.put("uid", uid);
+            hashMap.put("uName", name);
+            hashMap.put("uEmail", email);
+            hashMap.put("pId", timeStamp);
+            hashMap.put("uDp", dp);
+            hashMap.put("pTitle", title);
+            hashMap.put("pImage", "noImage");
+            hashMap.put("pDescription", description);
+            hashMap.put("pTime", timeStamp);
+
+            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Posts");
+            ref.child(timeStamp).setValue(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    pd.dismiss();
+                    Toast.makeText(AddPostActivity.this, "Post publicado", Toast.LENGTH_SHORT).show();
+                    titleBlog.setText("");
+                    descBlog.setText("");
+                    imgBlog.setImageURI(null);
+                    image_uri = null;
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(AddPostActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+
         }
     }
 

@@ -71,30 +71,4 @@ public class DashboardActivity extends AppCompatActivity {
                     return false;
                 }
             };
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if(item.getItemId() == R.id.action_add_post){
-            startActivity(new Intent(DashboardActivity.this, AddPostActivity.class));
-        }
-        else if(item.getItemId() == R.id.actionLogOut){
-            firebaseAuth.signOut();
-            startActivity(new Intent(DashboardActivity.this, MainActivity.class));
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void checkUserStatus(){
-        FirebaseUser user = firebaseAuth.getCurrentUser();
-        if(user != null){
-
-        }
-    }
 }
