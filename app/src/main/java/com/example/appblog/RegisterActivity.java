@@ -52,7 +52,7 @@ import java.util.List;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    private EditText registerMail, registerPassword, registerName;
+    private EditText registerMail, registerPassword;
     private Button registerBtn;
     private TextView alreadyHaveAnAccount;
 
@@ -88,7 +88,6 @@ public class RegisterActivity extends AppCompatActivity {
         registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String name = registerName.getText().toString().trim();
                 String email = registerMail.getText().toString().trim();
                 String password = registerPassword.getText().toString().trim();
 
@@ -119,7 +118,25 @@ public class RegisterActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
                             progressDialog.dismiss();
-                            startActivity(new Intent(RegisterActivity.this,HomeActivity.class));
+
+                            FirebaseUser user = mAuth.getCurrentUser();
+
+                            String email = user.getEmail();
+                            String uid = user.getUid();
+
+                            HashMap<Object, String> hashMap = new HashMap<>();
+                            hashMap.put("email",email);
+                            hashMap.put("uid",uid);
+                            hashMap.put("name","");
+                            hashMap.put("phone","");
+                            hashMap.put("image","");
+                            hashMap.put("cover","");
+
+                            FirebaseDatabase database = FirebaseDatabase.getInstance();
+                            DatabaseReference reference = database.getReference("Users");
+                            reference.child(uid).setValue(hashMap);
+
+                            startActivity(new Intent(RegisterActivity.this, DashboardActivity.class));
                             Toast.makeText(RegisterActivity.this, "Registro completo", Toast.LENGTH_SHORT).show();
                         }
                         else
