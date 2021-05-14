@@ -2,6 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/nav_home"
+        
         android:title="Muro"
         android:icon="@drawable/ic_home_black"/>
     <item

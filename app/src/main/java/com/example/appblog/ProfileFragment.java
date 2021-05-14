@@ -216,7 +216,7 @@ public class ProfileFragment extends Fragment {
         linearLayout.setPadding(10,10,10,10);
 
         EditText editText = new EditText(getActivity());
-        editText.setHint("Aceptar "+key);
+        editText.setHint("  Ingresar "+key);
         linearLayout.addView(editText);
 
         builder.setView(linearLayout);

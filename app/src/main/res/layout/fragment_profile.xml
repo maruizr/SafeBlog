@@ -18,7 +18,7 @@
                 android:id="@+id/coverIv"
                 android:layout_width="match_parent"
                 android:layout_height="180dp"
-                android:background="#8C52FF"
+                android:background="#BE48DF"
                 android:scaleType="fitXY">
 
             </ImageView>
@@ -31,7 +31,7 @@
 
                 <ImageView
                     android:layout_marginStart="20dp"
-                    android:background="@color/colorPrimaryDark"
+                    android:background="#CB6CE6"
                     android:id="@+id/avatarIv"
                     android:padding="5dp"
                     android:src="@drawable/ic_default_image_white"
@@ -43,7 +43,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:background="#6F26FF">
+                    android:background="#B624DF">
 
                     <TextView
                         android:id="@+id/nameTv"
@@ -87,6 +87,6 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:layout_margin="10dp"
-        app:backgroundTint="#8C52FF" />
+        app:backgroundTint="#B624DF" />
 
 </RelativeLayout>
