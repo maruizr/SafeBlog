@@ -14,12 +14,13 @@
         android:orientation="vertical">
 
         <LinearLayout
+            android:id="@+id/profileLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical">
 
-            <com.alexzh.circleimageview.CircleImageView
+            <com.pkmmte.view.CircularImageView
                 android:id="@+id/pictureIv"
                 android:scaleType="center"
                 android:src="@drawable/ic_default_image_white"
@@ -94,32 +95,25 @@
 
             <Button
                 android:id="@+id/likeBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="LIKE"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
                 android:backgroundTint="@color/white"
-                android:textColor="@color/black"
+                android:layout_marginRight="50dp"
                 android:drawablePadding="5dp"
                 android:drawableLeft="@drawable/ic_like_black"/>
             <Button
                 android:id="@+id/commentBtn"
-                android:layout_width="wrap_content"
+                android:layout_width="55dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="COMMENT"
                 android:backgroundTint="@color/white"
-                android:textColor="@color/black"
+                android:layout_marginRight="50dp"
                 android:drawablePadding="5dp"
                 android:drawableLeft="@drawable/ic_comment_black"/>
             <Button
                 android:id="@+id/shareBtn"
-                android:layout_width="wrap_content"
+                android:layout_width="55dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="SHARE"
                 android:backgroundTint="@color/white"
-                android:textColor="@color/black"
                 android:drawablePadding="5dp"
                 android:drawableLeft="@drawable/ic_share_black"/>
 

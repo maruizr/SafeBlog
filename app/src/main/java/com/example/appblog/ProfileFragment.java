@@ -14,7 +14,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.provider.MediaStore;
 import android.text.TextUtils;
@@ -28,9 +31,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.appblog.Adapter.PostAdapter;
+import com.example.appblog.Model.PostModel;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -49,7 +55,9 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.security.Key;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -67,6 +75,7 @@ public class ProfileFragment extends Fragment {
     ImageView avatarIv, coverIv;
     TextView nameTv, mailTv, phoneTv;
     FloatingActionButton fab;
+    RecyclerView postsRecyclerView;
 
     ProgressDialog pd;
 
@@ -77,6 +86,10 @@ public class ProfileFragment extends Fragment {
 
     String cameraPermissions[];
     String storagePermissions[];
+
+    List<PostModel> postModelList;
+    PostAdapter postAdapter;
+    String uid;
 
     Uri image_uri;
 
@@ -107,6 +120,7 @@ public class ProfileFragment extends Fragment {
         phoneTv = view.findViewById(R.id.phoneTv);
         coverIv = view.findViewById(R.id.coverIv);
         fab = view.findViewById(R.id.fab);
+        postsRecyclerView = view.findViewById(R.id.recyclerView_Posts);
 
         pd = new ProgressDialog(getActivity());
 
@@ -153,8 +167,73 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        postModelList = new ArrayList<>();
+
+        checkUserStatus();
+        loadMyPosts();
+
         // Inflate the layout for this fragment
         return view;
+    }
+
+    private void loadMyPosts() {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager.setStackFromEnd(true);
+        layoutManager.setReverseLayout(true);
+        postsRecyclerView.setLayoutManager(layoutManager);
+
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Posts");
+        Query query = ref.orderByChild("uid").equalTo(uid);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                postModelList.clear();
+                for(DataSnapshot ds: snapshot.getChildren()){
+                    PostModel myPosts = ds.getValue(PostModel.class);
+                    postModelList.add(myPosts);
+
+                    postAdapter = new PostAdapter(getActivity(), postModelList);
+
+                    postsRecyclerView.setAdapter(postAdapter);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void searchMyPosts(String searchQuery) {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager.setStackFromEnd(true);
+        layoutManager.setReverseLayout(true);
+        postsRecyclerView.setLayoutManager(layoutManager);
+
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Posts");
+        Query query = ref.orderByChild("uid").equalTo(uid);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                postModelList.clear();
+                for(DataSnapshot ds: snapshot.getChildren()){
+                    PostModel myPosts = ds.getValue(PostModel.class);
+
+                    if(myPosts.getpTitle().toLowerCase().contains(searchQuery.toLowerCase()) || myPosts.getpDescription().toLowerCase().contains(searchQuery.toLowerCase())){
+                        postModelList.add(myPosts);
+                    }
+                    postAdapter = new PostAdapter(getActivity(), postModelList);
+
+                    postsRecyclerView.setAdapter(postAdapter);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getActivity(), ""+ error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private boolean checkStoragePermission(){
@@ -248,6 +327,24 @@ public class ProfileFragment extends Fragment {
                             Toast.makeText(getActivity(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
+                    if(key.equals("name")){
+                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Posts");
+                        Query query = ref.orderByChild("uid").equalTo(uid);
+                        query.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                for(DataSnapshot ds: snapshot.getChildren()){
+                                    String child = ds.getKey();
+                                    snapshot.getRef().child(child).child("uName").setValue(value);
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+                    }
                 }
                 else{
                     Toast.makeText(getActivity(), "Por favor aceptar "+key, Toast.LENGTH_SHORT).show();
@@ -370,6 +467,24 @@ public class ProfileFragment extends Fragment {
                                     Toast.makeText(getActivity(), "Error al actualizar la imagen", Toast.LENGTH_SHORT).show();
                                 }
                             });
+                            if(profileOrCoverPhoto.equals("image")){
+                                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Posts");
+                                Query query = ref.orderByChild("uid").equalTo(uid);
+                                query.addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        for(DataSnapshot ds: snapshot.getChildren()){
+                                            String child = ds.getKey();
+                                            snapshot.getRef().child(child).child("uDp").setValue(downloadUri.toString());
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+                            }
                         }
                         else{
                             pd.dismiss();
@@ -403,6 +518,17 @@ public class ProfileFragment extends Fragment {
         startActivityForResult(galleryIntent,IMAGE_PICK_GALLERY_CODE);
     }
 
+    private void checkUserStatus(){
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+        if(user != null){
+            uid = user.getUid();
+        }
+        else{
+            startActivity(new Intent(getActivity(), StartActivity.class));
+            getActivity().finish();
+        }
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         setHasOptionsMenu(true);
@@ -412,6 +538,34 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main_menu, menu);
+
+        MenuItem item = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                if(!TextUtils.isEmpty(s)){
+                    searchMyPosts(s);
+                }
+                else{
+                    loadMyPosts();
+                }
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                if(!TextUtils.isEmpty(s)){
+                    searchMyPosts(s);
+                }
+                else{
+                    loadMyPosts();
+                }
+                return false;
+            }
+        });
+
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -423,16 +577,5 @@ public class ProfileFragment extends Fragment {
             checkUserStatus();
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private void checkUserStatus(){
-        FirebaseUser user = firebaseAuth.getCurrentUser();
-        if(user != null){
-
-        }
-        else{
-            startActivity(new Intent(getActivity(), StartActivity.class));
-            getActivity().finish();
-        }
     }
 }

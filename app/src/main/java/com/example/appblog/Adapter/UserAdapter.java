@@ -1,6 +1,9 @@
 package com.example.appblog.Adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.appblog.Model.UserModel;
 import com.example.appblog.R;
+import com.example.appblog.ThereProfileActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -35,6 +39,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyHolder>{
 
     @Override
     public void onBindViewHolder(@NonNull UserAdapter.MyHolder holder, int i) {
+        final String hisUId = userModelList.get(i).getUid();
         String userImage =  userModelList.get(i).getImage();
         String userName = userModelList.get(i).getName();
         String userMail = userModelList.get(i).getEmail();
@@ -52,6 +57,22 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyHolder>{
             @Override
             public void onClick(View v) {
                 Toast.makeText(context, ""+userMail, Toast.LENGTH_SHORT).show();
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setItems(new String[]{"Perfil", "Chat"}, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(which == 0){
+                            Intent intent = new Intent(context, ThereProfileActivity.class);
+                            intent.putExtra("uid", hisUId);
+                            context.startActivity(intent);
+                        }
+                        if(which == 1){
+
+                        }
+                    }
+                });
+                builder.create().show();
             }
         });
     }

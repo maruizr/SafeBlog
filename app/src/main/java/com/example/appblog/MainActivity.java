@@ -123,23 +123,6 @@ public class MainActivity extends AppCompatActivity {
                         if(task.isSuccessful()){
                             progressDialog.dismiss();
 
-                            FirebaseUser user = auth.getCurrentUser();
-
-                            String email = user.getEmail();
-                            String uid = user.getUid();
-
-                            HashMap<Object, String> hashMap = new HashMap<>();
-                            hashMap.put("email",email);
-                            hashMap.put("uid",uid);
-                            hashMap.put("name","");
-                            hashMap.put("phone","");
-                            hashMap.put("image","");
-                            hashMap.put("cover","");
-
-                            FirebaseDatabase database = FirebaseDatabase.getInstance();
-                            DatabaseReference reference = database.getReference("Users");
-                            reference.child(uid).setValue(hashMap);
-
                             Toast.makeText(MainActivity.this, "Login exitoso", Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(MainActivity.this, DashboardActivity.class));
                         }
