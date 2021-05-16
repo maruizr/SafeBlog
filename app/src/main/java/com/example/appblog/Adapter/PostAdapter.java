@@ -1,5 +1,6 @@
 package com.example.appblog.Adapter;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -29,6 +30,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.appblog.AddPostActivity;
 import com.example.appblog.Model.PostModel;
+import com.example.appblog.PostDetailActivity;
 import com.example.appblog.R;
 import com.example.appblog.ThereProfileActivity;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -74,6 +76,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MyHolder> {
         return new MyHolder(view);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull MyHolder holder, int i) {
         String uid = postList.get(i).getUid();
@@ -86,6 +89,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MyHolder> {
         String pImage = postList.get(i).getpImage();
         String pTimeStamp = postList.get(i).getpTime();
         String pLikes = postList.get(i).getpLikes();
+        String pComments = postList.get(i).getpComments();
 
         Calendar calendar = Calendar.getInstance(Locale.getDefault());
         calendar.setTimeInMillis(Long.parseLong(pTimeStamp));
@@ -96,6 +100,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MyHolder> {
         holder.pTitleTv.setText(pTitle);
         holder.pDescriptionTv.setText(pDescription);
         holder.pLikesTv.setText(pLikes +" Likes");
+        holder.pCommentsTv.setText(pComments +" Comentarios");
         setLikes(holder, pId);
 
         try{
@@ -160,7 +165,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MyHolder> {
         holder.commentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "Comment", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(context, PostDetailActivity.class);
+                intent.putExtra("postId", pId); //con este id se obtendra el detalle del post, es el id del que clickeo.
+                context.startActivity(intent);
             }
         });
         holder.shareBtn.setOnClickListener(new View.OnClickListener() {
@@ -208,6 +215,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MyHolder> {
             popupMenu.getMenu().add(Menu.NONE,0,0,"Eliminar");
             popupMenu.getMenu().add(Menu.NONE,1,0,"Editar");
         }
+        popupMenu.getMenu().add(Menu.NONE,2,0,"View Detail");
+
 
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
@@ -220,6 +229,11 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MyHolder> {
                     Intent intent = new Intent(context, AddPostActivity.class);
                     intent.putExtra("key", "editPost");
                     intent.putExtra("editPostId",pId);
+                    context.startActivity(intent);
+                }
+                else if (id==2){
+                    Intent intent = new Intent(context, PostDetailActivity.class);
+                    intent.putExtra("postId", pId); //con este id se obtendra el detalle del post, es el id del que clickeo.
                     context.startActivity(intent);
                 }
                 return false;
@@ -301,7 +315,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MyHolder> {
 
     class MyHolder extends RecyclerView.ViewHolder{
         ImageView uPictureIv, pImageIv;
-        TextView uNameTv, pTimeTv,pTitleTv,pDescriptionTv, pLikesTv;
+        TextView uNameTv, pTimeTv,pTitleTv,pDescriptionTv, pLikesTv, pCommentsTv;
         ImageButton moreBtn;
         Button likeBtn, commentBtn, shareBtn;
         LinearLayout profileLayout;
@@ -316,6 +330,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MyHolder> {
             pTitleTv = itemView.findViewById(R.id.titleTv);
             pDescriptionTv = itemView.findViewById(R.id.descTv);
             pLikesTv = itemView.findViewById(R.id.likesTv);
+            pCommentsTv = itemView.findViewById(R.id.pCommentsTv);
             moreBtn = itemView.findViewById(R.id.moreBtn);
             likeBtn = itemView.findViewById(R.id.likeBtn);
             commentBtn = itemView.findViewById(R.id.commentBtn);

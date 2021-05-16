@@ -2,16 +2,17 @@ package com.example.appblog.Model;
 
 public class PostModel {
 
-    String pId, pTitle, pDescription, pLikes, pImage, pTime, uid, uEmail, uDp, uName;
+    String pId, pTitle, pDescription, pLikes, pComments, pImage, pTime, uid, uEmail, uDp, uName;
 
     public PostModel() {
     }
 
-    public PostModel(String pId, String pTitle, String pDescription, String pLikes, String pImage, String pTime, String uid, String uEmail, String uDp, String uName) {
+    public PostModel(String pId, String pTitle, String pDescription, String pLikes, String pComments, String pImage, String pTime, String uid, String uEmail, String uDp, String uName) {
         this.pId = pId;
         this.pTitle = pTitle;
         this.pDescription = pDescription;
         this.pLikes = pLikes;
+        this.pComments = pComments;
         this.pImage = pImage;
         this.pTime = pTime;
         this.uid = uid;
@@ -50,6 +51,14 @@ public class PostModel {
 
     public void setpLikes(String pLikes) {
         this.pLikes = pLikes;
+    }
+
+    public String getpComments() {
+        return pComments;
+    }
+
+    public void setpComments(String pComments) {
+        this.pComments = pComments;
     }
 
     public String getpImage() {
@@ -99,6 +108,6 @@ public class PostModel {
     public void setuName(String uName) {
         this.uName = uName;
     }
-}
 
+}
 
