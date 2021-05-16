@@ -14,6 +14,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.appblog.ChatActivity;
 import com.example.appblog.Model.UserModel;
 import com.example.appblog.R;
 import com.example.appblog.ThereProfileActivity;
@@ -68,7 +69,9 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyHolder>{
                             context.startActivity(intent);
                         }
                         if(which == 1){
-
+                            Intent intent = new Intent(context, ChatActivity.class);
+                            intent.putExtra("uid", hisUId);
+                            context.startActivity(intent);
                         }
                     }
                 });

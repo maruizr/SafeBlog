@@ -3,6 +3,8 @@ package com.example.appblog;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
@@ -23,6 +25,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.appblog.Adapter.CommentsAdapter;
+import com.example.appblog.Model.CommentsModel;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -36,8 +40,10 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 public class PostDetailActivity extends AppCompatActivity {
@@ -59,6 +65,10 @@ public class PostDetailActivity extends AppCompatActivity {
     ImageButton moreBtn;
     Button likeBtn, shareBtn;
     LinearLayout profileLayout;
+    RecyclerView recyclerView;
+
+    List<CommentsModel> commentsModelList;
+    CommentsAdapter commentsAdapter;
 
     //views comentarios
     EditText commentEt;
@@ -73,6 +83,9 @@ public class PostDetailActivity extends AppCompatActivity {
 
         //barra y sus propiedades
         ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle("Detalle del Post");
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayShowHomeEnabled(true);
 
 
         //tener id del post usando itent
@@ -92,10 +105,11 @@ public class PostDetailActivity extends AppCompatActivity {
         likeBtn = findViewById(R.id.likeBtn);
         shareBtn = findViewById(R.id.shareBtn);
         profileLayout = findViewById(R.id.profileLayout);
+        recyclerView = findViewById(R.id.recyclerView);
 
         commentEt = findViewById(R.id.commentEt);
         sendBtn = findViewById(R.id.sendBtn);
-        cAvatarIv = findViewById(R.id.avatarIv);
+        cAvatarIv = findViewById(R.id.cAvatarIv);
 
         loadPostInfo();
 
@@ -103,8 +117,9 @@ public class PostDetailActivity extends AppCompatActivity {
 
         loadUserInfo();
 
-        assert actionBar != null;
         actionBar.setSubtitle("Has ingresado como: "+MyEmail);
+
+        loadComments();
 
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,6 +133,37 @@ public class PostDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 likePost();
+            }
+        });
+    }
+
+    private void loadComments() {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(layoutManager);
+
+        commentsModelList = new ArrayList<>();
+
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Posts").child(postId).child("Comments");
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                commentsModelList.clear();
+                for (DataSnapshot ds: snapshot.getChildren()){
+                    CommentsModel commentsModel = ds.getValue(CommentsModel.class);
+
+                    commentsModelList.add(commentsModel);
+
+
+
+                    commentsAdapter = new CommentsAdapter(getApplicationContext(), commentsModelList, myUid, postId);
+
+                    recyclerView.setAdapter(commentsAdapter);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
     }
@@ -177,7 +223,6 @@ public class PostDetailActivity extends AppCompatActivity {
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("cId", timeStamp);
         hashMap.put("comment", comment);
-        hashMap.put("pComments", "0");
         hashMap.put("timestamp", timeStamp);
         hashMap.put("uid", myUid);
         hashMap.put("uEmail", MyEmail);
@@ -236,6 +281,12 @@ public class PostDetailActivity extends AppCompatActivity {
                   myName = ""+ds.child("name").getValue();
                   myDp = ""+ds.child("image").getValue();
 
+                  try{
+                      Picasso.get().load(myDp).placeholder(R.drawable.ic_default_img).into(cAvatarIv);
+                  }
+                  catch (Exception e){
+                      Picasso.get().load(R.drawable.ic_default_img).into(cAvatarIv);
+                  }
 
               }
             }
@@ -308,6 +359,12 @@ public class PostDetailActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return super.onSupportNavigateUp();
     }
 
     private void checkUserStatus(){

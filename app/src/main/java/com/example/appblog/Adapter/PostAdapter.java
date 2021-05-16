@@ -192,11 +192,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MyHolder> {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.child(postKey).hasChild(myUid)){
                     holder.likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_liked, 0,0,0);
-                    holder.likeBtn.setText("Me gusta");
                 }
                 else{
                     holder.likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like_black, 0,0,0);
-                    holder.likeBtn.setText("Me gusta");
                 }
             }
 

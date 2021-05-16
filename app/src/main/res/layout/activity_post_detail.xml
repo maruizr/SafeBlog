@@ -7,9 +7,9 @@
     tools:context=".PostDetailActivity">
     
     <androidx.core.widget.NestedScrollView
+        android:layout_above="@+id/commentsLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -153,11 +153,27 @@
 
             </androidx.cardview.widget.CardView>
 
+            <TextView
+                android:text="Comentarios"
+                android:textColor="@color/black"
+                android:padding="2dp"
+                android:drawablePadding="5dp"
+                android:drawableStart="@drawable/ic_comments_black"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_comments_black"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
     <RelativeLayout
+        android:id="@+id/commentsLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true">
