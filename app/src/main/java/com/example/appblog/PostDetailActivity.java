@@ -142,7 +142,7 @@ public class PostDetailActivity extends AppCompatActivity {
                         likeBtn.setText("Like");
                     }
                     else{
-                        postsRef.child(postId).child("pLikes").setValue(""+(Integer.parseInt(pLikes)-1));
+                        postsRef.child(postId).child("pLikes").setValue(""+(Integer.parseInt(pLikes)+1));
                         likesRef.child(postId).child(myUid).setValue("Liked");
                         mProcessLike = false;
 
@@ -256,7 +256,7 @@ public class PostDetailActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot ds: dataSnapshot.getChildren()) {
                     String pTitle = ""+ds.child("pTitle").getValue();
-                    String pDescr= ""+ds.child("pDescr").getValue();
+                    String pDescription = ""+ds.child("pDescription").getValue();
                     pLikes  = ""+ds.child("pLikes").getValue();
                     String pTimeStamp= ""+ds.child("pTime").getValue();
                     String pImage= ""+ds.child("pImage").getValue();
@@ -271,8 +271,8 @@ public class PostDetailActivity extends AppCompatActivity {
                     String pTime = DateFormat.format("dd/MM/yyyy hh:mm aa",calendar).toString();
 
 
-                    pTitleTv.setText(pTime);
-                    pDescriptionTv.setText(pDescr);
+                    pTitleTv.setText(pTitle);
+                    pDescriptionTv.setText(pDescription);
                     plikesTv.setText(pLikes + "Likes");
                     pTimeTiv.setText(pTime);
                     pCommentsTv.setText(commentCount +" Comentarios");

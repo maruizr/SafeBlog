@@ -290,7 +290,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MyHolder> {
         ProgressDialog pd = new ProgressDialog(context);
         pd.setMessage("Eliminando");
 
-        Query fquery = FirebaseDatabase.getInstance().getReference("Posts").orderByChild("pId");
+        Query fquery = FirebaseDatabase.getInstance().getReference("Posts").orderByChild("pId").equalTo(pId);
         fquery.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
