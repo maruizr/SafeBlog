@@ -8,6 +8,12 @@
         app:showAsAction="never" />
 
     <item
+        android:title="Comunicarse"
+        android:id="@+id/btnComunicarse"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        app:showAsAction="never" />
+
+    <item
         android:title="Agregar posteo"
         android:id="@+id/action_add_post"
         xmlns:app="http://schemas.android.com/apk/res-auto"
